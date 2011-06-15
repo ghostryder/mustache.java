@@ -1,0 +1,10 @@
+@bake.Java(
+  dependencies = {
+  "external:org.codehaus.jackson/jackson-mapper-asl@1.5.2",
+  "external:org.codehaus.jackson/jackson-core-asl@1.5.2",
+  "external:com.google.guava/guava@r09",
+  "core",
+  "external:javax.servlet/servlet-api@2.5"
+}
+)
+package compiler;

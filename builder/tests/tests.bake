@@ -1,0 +1,12 @@
+@bake.Java(
+  dependencies = {
+      "external:junit/junit@4.+",
+      "core",
+      "external:org.codehaus.jackson/jackson-mapper-asl@1.5.2",
+      "external:org.codehaus.jackson/jackson-core-asl@1.5.2",
+      "external:com.google.guava/guava@r09",
+      "builder",
+      "network",
+      "compiler"
+  }
+) package builder.tests;

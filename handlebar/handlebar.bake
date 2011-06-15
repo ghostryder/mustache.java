@@ -1,0 +1,12 @@
+@bake.Java(dependencies = {
+  "external:org.codehaus.jackson/jackson-core-asl@1.5.2",
+  "external:org.codehaus.jackson/jackson-mapper-asl@1.5.2",
+  "external:com.google.code.cli-parser/cli@7",
+  "core",
+  "builder",
+  "external:org.eclipse.jetty/jetty-server@7.2.2.v20101205",
+  "external:org.eclipse.jetty/jetty-util@7.2.2.v20101205",
+  "external:javax.servlet/servlet-api@2.5",
+  "external:com.google.guava/guava@r09"
+}, mainClass = "com.sampullara.mustache.Handlebar" )
+package handlebar;

@@ -26,6 +26,7 @@ public class BenchmarkTest extends TestCase {
     super.setUp();
     File file = new File("src/test/resources");
     root = file.exists() ? file : new File("../src/test/resources");
+    root = root.exists() ? root : new File("../../src/test/resources");
   }
 
   protected String getContents(File root, String file) throws IOException {

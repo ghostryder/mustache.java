@@ -32,12 +32,13 @@ import java.util.concurrent.Future;
  * Date: May 3, 2010
  * Time: 10:23:54 AM
  */
-public class InterpreterTest extends TestCase {
+public class CompilerTest extends TestCase {
   private File root;
 
   public void testSimple() throws MustacheException, IOException, ExecutionException, InterruptedException {
-    MustacheBuilder c = new MustacheBuilder(root);
+    MustacheCompiler c = new MustacheCompiler(root);
     Mustache m = c.parseFile("simple.html");
+    c.setOutputDirectory("target/classes");
     StringWriter sw = new StringWriter();
     FutureWriter writer = new FutureWriter(sw);
     m.execute(writer, new Scope(new Object() {
@@ -55,8 +56,9 @@ public class InterpreterTest extends TestCase {
   }
 
   public void testProperties() throws MustacheException, IOException, ExecutionException, InterruptedException {
-    MustacheBuilder c = new MustacheBuilder(root);
+    MustacheCompiler c = new MustacheCompiler(root);
     Mustache m = c.parseFile("simple.html");
+    c.setOutputDirectory("target/classes");
     StringWriter sw = new StringWriter();
     FutureWriter writer = new FutureWriter(sw);
     m.execute(writer, new Scope(new Object() {
@@ -74,8 +76,9 @@ public class InterpreterTest extends TestCase {
   }
 
   public void testSimpleWithMap() throws MustacheException, IOException, ExecutionException, InterruptedException {
-    MustacheBuilder c = new MustacheBuilder(root);
+    MustacheCompiler c = new MustacheCompiler(root);
     Mustache m = c.parseFile("simple.html");
+    c.setOutputDirectory("target/classes");
     StringWriter sw = new StringWriter();
     FutureWriter writer = new FutureWriter(sw);
     m.execute(writer, new HashMap() {{
@@ -89,8 +92,9 @@ public class InterpreterTest extends TestCase {
   }
 
   public void testSimpleWithJson() throws MustacheException, IOException, ExecutionException, InterruptedException {
-    MustacheBuilder c = new MustacheBuilder(root);
+    MustacheCompiler c = new MustacheCompiler(root);
     Mustache m = c.parseFile("simple.html");
+    c.setOutputDirectory("target/classes");
     StringWriter sw = new StringWriter();
     FutureWriter writer = new FutureWriter(sw);
     JsonFactory jf = new MappingJsonFactory();
@@ -101,8 +105,9 @@ public class InterpreterTest extends TestCase {
   }
 
   public void testSimpleLamda() throws MustacheException, IOException {
-    MustacheBuilder c = new MustacheBuilder(root);
+    MustacheCompiler c = new MustacheCompiler(root);
     Mustache m = c.parseFile("lambda.html");
+    c.setOutputDirectory("target/classes");
     StringWriter sw = new StringWriter();
     FutureWriter writer = new FutureWriter(sw);
     m.execute(writer, new Scope(new Object() {
@@ -123,7 +128,7 @@ public class InterpreterTest extends TestCase {
   }
 
   public void testSimpleWithSave() throws MustacheException, IOException, ExecutionException, InterruptedException {
-    MustacheBuilder c = init();
+    MustacheJava c = init();
     Mustache m = c.parseFile("simple.html");
     StringWriter sw = new StringWriter();
     FutureWriter writer = new FutureWriter(sw);
@@ -142,7 +147,7 @@ public class InterpreterTest extends TestCase {
   }
 
   public void testMissing() throws MustacheException, IOException, ExecutionException, InterruptedException {
-    MustacheBuilder c = init();
+    MustacheJava c = init();
     Mustache m = c.parseFile("simple.html");
     StringWriter sw = new StringWriter();
     FutureWriter writer = new FutureWriter(sw);
@@ -153,7 +158,7 @@ public class InterpreterTest extends TestCase {
   }
 
   public void testSetWriter() throws MustacheException, IOException, ExecutionException, InterruptedException {
-    MustacheBuilder c = init();
+    MustacheJava c = init();
     Mustache m = c.parseFile("simple.html");
     FutureWriter writer = new FutureWriter();
     m.execute(writer, new Scope(new Object() {
@@ -173,7 +178,7 @@ public class InterpreterTest extends TestCase {
   }
 
   public void testSimple2() throws MustacheException, IOException, ExecutionException, InterruptedException {
-    MustacheBuilder c = init();
+    MustacheJava c = init();
     Mustache m = c.parseFile("simple.html");
     StringWriter sw = new StringWriter();
     FutureWriter writer = new FutureWriter(sw);
@@ -192,7 +197,7 @@ public class InterpreterTest extends TestCase {
   }
 
   public void testEscaped() throws MustacheException, IOException {
-    MustacheBuilder c = init();
+    MustacheJava c = init();
     Mustache m = c.parseFile("escaped.html");
     StringWriter sw = new StringWriter();
     FutureWriter writer = new FutureWriter(sw);
@@ -205,7 +210,7 @@ public class InterpreterTest extends TestCase {
   }
 
   public void testUnescaped() throws MustacheException, IOException {
-    MustacheBuilder c = new MustacheBuilder(root);
+    MustacheJava c = new MustacheCompiler(root);
     Mustache m = c.parseFile("unescaped.html");
     StringWriter sw = new StringWriter();
     FutureWriter writer = new FutureWriter(sw);
@@ -219,7 +224,7 @@ public class InterpreterTest extends TestCase {
   }
 
   public void testInverted() throws MustacheException, IOException {
-    MustacheBuilder c = init();
+    MustacheJava c = init();
     Mustache m = c.parseFile("inverted_section.html");
     StringWriter sw = new StringWriter();
     FutureWriter writer = new FutureWriter(sw);
@@ -235,7 +240,7 @@ public class InterpreterTest extends TestCase {
   }
 
   public void testComments() throws MustacheException, IOException {
-    MustacheBuilder c = init();
+    MustacheJava c = init();
     Mustache m = c.parseFile("comments.html");
     StringWriter sw = new StringWriter();
     FutureWriter writer = new FutureWriter(sw);
@@ -249,7 +254,7 @@ public class InterpreterTest extends TestCase {
   }
 
   public void testPartial() throws MustacheException, IOException {
-    MustacheBuilder c = init();
+    MustacheJava c = init();
     Mustache m = c.parseFile("template_partial.html");
     StringWriter sw = new StringWriter();
     FutureWriter writer = new FutureWriter(sw);
@@ -296,7 +301,7 @@ public class InterpreterTest extends TestCase {
         return ((List) s.get("item")).size() == 0;
       }
     });
-    MustacheBuilder c = new MustacheBuilder(root);
+    MustacheJava c = new MustacheCompiler(root);
     Mustache m = c.parseFile("complex.html");
     StringWriter sw = new StringWriter();
     FutureWriter writer = new FutureWriter(sw);
@@ -311,7 +316,7 @@ public class InterpreterTest extends TestCase {
     JsonParser jp = new MappingJsonFactory().createJsonParser(content);
     JsonNode jsonNode = jp.readValueAsTree();
     Scope scope = new Scope(jsonNode);
-    MustacheBuilder c = init();
+    MustacheJava c = init();
     Mustache m = c.parseFile("template_partial.html");
     StringWriter sw = new StringWriter();
     FutureWriter writer = new FutureWriter(sw);
@@ -324,7 +329,7 @@ public class InterpreterTest extends TestCase {
   @SuppressWarnings("serial")
   public void testCurrentElementInArray() throws IOException, MustacheException {
       
-      MustacheBuilder c = init();
+      MustacheJava c = init();
       Mustache m = c.parseFile("simple_array.html");
       StringWriter sw = new StringWriter();
       FutureWriter writer = new FutureWriter(sw);
@@ -352,7 +357,7 @@ public class InterpreterTest extends TestCase {
   }
   
   public void testReadme() throws MustacheException, IOException {
-    MustacheBuilder c = init();
+    MustacheJava c = init();
     Mustache m = c.parseFile("items.html");
     StringWriter sw = new StringWriter();
     FutureWriter writer = new FutureWriter(sw);
@@ -364,29 +369,31 @@ public class InterpreterTest extends TestCase {
   }
 
   public void testReadme2() throws MustacheException, IOException {
-    MustacheBuilder c = new MustacheBuilder(root);
+    MustacheCompiler c = new MustacheCompiler(root);
     Mustache m = c.parseFile("items2.html");
+    c.setOutputDirectory("target/classes");
     StringWriter sw = new StringWriter();
     FutureWriter writer = new FutureWriter(sw);
     long start = System.currentTimeMillis();
     m.execute(writer, new Scope(new Context()));
     writer.flush();
     long diff = System.currentTimeMillis() - start;
-    assertEquals(getContents(root, "items.txt"), sw.toString());
     assertTrue("Should be a little bit more than 1 second: " + diff, diff > 999 && diff < 2000);
+    assertEquals(getContents(root, "items.txt"), sw.toString());
   }
 
   public void testReadme3() throws MustacheException, IOException {
-    MustacheBuilder c = new MustacheBuilder(root);
+    MustacheCompiler c = new MustacheCompiler(root);
     Mustache m = c.parseFile("items3.html");
+    c.setOutputDirectory("target/classes");
     StringWriter sw = new StringWriter();
     FutureWriter writer = new FutureWriter(sw);
     long start = System.currentTimeMillis();
     m.execute(writer, new Scope(new Context()));
     writer.flush();
     long diff = System.currentTimeMillis() - start;
-    assertEquals(getContents(root, "items3.txt"), sw.toString());
     assertTrue("Should be a little bit more than 1 second: " + diff, diff > 999 && diff < 2000);
+    assertEquals(getContents(root, "items3.txt"), sw.toString());
   }
 
   static class Context {
@@ -430,7 +437,7 @@ public class InterpreterTest extends TestCase {
   }
 
   public void testJSONHttpRequest() throws MustacheException, IOException {
-    MustacheBuilder c = init();
+    MustacheJava c = init();
     Mustache m = c.parseFile("simple2.html");
     StringWriter sw = new StringWriter();
     FutureWriter writer = new FutureWriter(sw);
@@ -444,8 +451,8 @@ public class InterpreterTest extends TestCase {
     assertEquals(getContents(root, "simple.txt"), sw.toString());
   }
 
-  private MustacheBuilder init() {
-    return new MustacheBuilder(root);
+  private MustacheJava init() {
+    return new MustacheCompiler(root, "target/test-classes");
   }
 
   protected String getContents(File root, String file) throws IOException {
@@ -463,6 +470,6 @@ public class InterpreterTest extends TestCase {
     super.setUp();
     File file = new File("src/test/resources");
     root = file.exists() ? file : new File("../src/test/resources");
+    root = root.exists() ? root : new File("../../src/test/resources");
   }
-
 }

@@ -18,6 +18,7 @@ public class I18NTest  extends CompilerTest {
         super.setUp();
         File file = new File("src/test/resources");
         root = file.exists() ? file : new File("../src/test/resources");
+        root = root.exists() ? root : new File("../../src/test/resources");
      }
      public void testChinese() throws MustacheException, IOException, ExecutionException, InterruptedException {
         MustacheCompiler c = new MustacheCompiler(root);
