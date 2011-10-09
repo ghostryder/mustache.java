@@ -1,6 +1,7 @@
 package com.sampullara.mustache;
 
 import com.sampullara.util.FutureWriter;
+import com.sampullara.util.ImmediateExecutorService;
 import junit.framework.TestCase;
 
 import java.io.BufferedReader;
@@ -77,7 +78,7 @@ public class BenchmarkTest extends TestCase {
         System.out.println("Compiler: " + total);
       }
     }
-    FutureWriter.setExecutorService(new LazyExecutorService());
+    FutureWriter.setExecutorService(new ImmediateExecutorService());
     for (int i = 0; i < 3; i++) {
       {
         long start = System.currentTimeMillis();

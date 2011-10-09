@@ -1,4 +1,4 @@
-package com.sampullara.mustache;
+package com.sampullara.util;
 
 import com.google.common.base.Function;
 import com.google.common.collect.Iterables;
@@ -17,7 +17,7 @@ import java.util.concurrent.TimeoutException;
 /**
  * No context-switch, lazy evaluating executor service.
  */
-public class LazyExecutorService implements ExecutorService {
+public class ImmediateExecutorService implements ExecutorService {
   private volatile boolean shutdown;
 
   @Override
@@ -47,12 +47,12 @@ public class LazyExecutorService implements ExecutorService {
 
   @Override
   public <T> Future<T> submit(final Callable<T> task) {
-    return new LazyFuture<T>(task);
+    return new ImmediateFuture<T>(task);
   }
 
   @Override
   public <T> Future<T> submit(final Runnable task, final T result) {
-    return new LazyFuture<T>(new Callable<T>() {
+    return new ImmediateFuture<T>(new Callable<T>() {
       @Override
       public T call() throws Exception {
         task.run();
@@ -63,7 +63,7 @@ public class LazyExecutorService implements ExecutorService {
 
   @Override
   public Future<?> submit(final Runnable task) {
-    return new LazyFuture<Void>(new Callable<Void>() {
+    return new ImmediateFuture<Void>(new Callable<Void>() {
       @Override
       public Void call() throws Exception {
         task.run();
@@ -77,7 +77,7 @@ public class LazyExecutorService implements ExecutorService {
     return Lists.newArrayList(Iterables.transform(tasks, new Function<Callable<T>, Future<T>>() {
       @Override
       public Future<T> apply(Callable<T> input) {
-        return new LazyFuture<T>(input);
+        return new ImmediateFuture<T>(input);
       }
     }));
   }
@@ -89,7 +89,7 @@ public class LazyExecutorService implements ExecutorService {
 
   @Override
   public <T> T invokeAny(Collection<? extends Callable<T>> tasks) throws InterruptedException, ExecutionException {
-    return new LazyFuture<T>(tasks.iterator().next()).get();
+    return new ImmediateFuture<T>(tasks.iterator().next()).get();
   }
 
   @Override
@@ -102,25 +102,12 @@ public class LazyExecutorService implements ExecutorService {
     command.run();
   }
 
-  private class LazyFuture<T> extends AbstractFuture<T> {
-    private final Callable<T> task;
-
-    public LazyFuture(Callable<T> task) {
-      this.task = task;
-    }
-
-    @Override
-    public T get(long timeout, TimeUnit unit) throws InterruptedException, TimeoutException, ExecutionException {
-      return get();
-    }
-
-    @Override
-    public T get() throws InterruptedException, ExecutionException {
+  private class ImmediateFuture<T> extends AbstractFuture<T> {
+    public ImmediateFuture(Callable<T> task) {
       try {
         set(task.call());
-        return super.get();
       } catch (Exception e) {
-        throw new ExecutionException(e);
+        setException(e);
       }
     }
   }
