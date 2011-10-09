@@ -616,6 +616,7 @@ public class InterpreterTest extends TestCase {
 
   protected void setUp() throws Exception {
     super.setUp();
+    FutureWriter.setExecutorService(new LazyExecutorService());
     File file = new File("src/test/resources");
     root = new File(file, "simple.html").exists() ? file : new File("../src/test/resources");
   }
