@@ -12,8 +12,28 @@ import java.util.concurrent.atomic.AtomicInteger;
  * Time: 1:26 PM
  */
 public interface Code {
+  /**
+   * Executes the code element. Code elements are expected to use the current scope
+   * and write their output to the future writer.
+   *
+   * @param fw
+   * @param scope
+   * @throws MustacheException
+   */
   void execute(FutureWriter fw, Scope scope) throws MustacheException;
 
+  /**
+   * Write out the representation of this element and its subelements.
+   * 
+   * @param fw
+   */
+  void identity(FutureWriter fw) throws MustacheException;
+
+  /**
+   * Get the line number that this code element begins.
+   * 
+   * @return
+   */
   int getLine();
 
   /**

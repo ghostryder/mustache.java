@@ -120,10 +120,19 @@ public class BuilderCodeFactory implements CodeFactory {
       return line;
     }
 
-    protected void identity(String marker, FutureWriter fw, Scope scope) throws IOException, MustacheException {
-      fw.append("{{").append(marker).append(variable).append("}}");
-      execute(fw, m.iterable(scope, variable));
-      fw.append("{{/").append(variable).append("}}");
+    protected void identity(String marker, FutureWriter fw) throws MustacheException {
+      try {
+        fw.append("{{").append(marker).append(variable).append("}}");
+        for (Code code : codes) {
+          if (Mustache.debug) {
+            Mustache.line.set(code.getLine());
+          }
+          code.identity(fw);
+        }
+        fw.append("{{/").append(variable).append("}}");
+      } catch (IOException e) {
+        throw new MustacheException("Failed to write", e);
+      }
     }
   }
 
@@ -134,15 +143,12 @@ public class BuilderCodeFactory implements CodeFactory {
 
     @Override
     public void execute(FutureWriter fw, Scope scope) throws MustacheException {
-      try {
-        if (scope == IdentityScope.one) {
-          identity("#", fw, scope);
-        } else {
-          execute(fw, m.iterable(scope, variable));
-        }
-      } catch (IOException e) {
-        throw new MustacheException(e);
-      }
+      execute(fw, m.iterable(scope, variable));
+    }
+
+    @Override
+    public void identity(FutureWriter fw) throws MustacheException {
+      identity("#", fw);
     }
 
     @Override
@@ -181,22 +187,19 @@ public class BuilderCodeFactory implements CodeFactory {
 
     @Override
     public void execute(FutureWriter fw, Scope scope) throws MustacheException {
-      try {
-        if (scope == IdentityScope.one) {
-          identity("_", fw, scope);
-        } else {
-          Object function = m.getValue(scope, variable);
-          if (function instanceof Function) {
-            execute(fw, m.function(scope, (Function) function));
-          } else if (function == null) {
-            execute(fw, Lists.newArrayList(scope));
-          } else {
-            throw new MustacheException("Not a function: " + function);
-          }
-        }
-      } catch (IOException e) {
-        throw new MustacheException(e);
+      Object function = m.getValue(scope, variable);
+      if (function instanceof Function) {
+        execute(fw, m.function(scope, (Function) function));
+      } else if (function == null) {
+        execute(fw, Lists.newArrayList(scope));
+      } else {
+        throw new MustacheException("Not a function: " + function);
       }
+    }
+
+    @Override
+    public void identity(FutureWriter fw) throws MustacheException {
+      identity("_", fw);
     }
 
     @Override
@@ -242,7 +245,7 @@ public class BuilderCodeFactory implements CodeFactory {
       fw = m.pushWriter(fw);
       try {
         if (scope == IdentityScope.one) {
-          identity("?", fw, scope);
+          identity("?", fw);
         } else {
           execute(fw, m.ifiterable(scope, variable));
         }
@@ -279,7 +282,7 @@ public class BuilderCodeFactory implements CodeFactory {
       fw = m.pushWriter(fw);
       try {
         if (scope == IdentityScope.one) {
-          identity("^", fw, scope);
+          identity("^", fw);
         } else {
           execute(fw, m.inverted(scope, variable));
         }
@@ -393,7 +396,7 @@ public class BuilderCodeFactory implements CodeFactory {
         } else {
           // fail on everything else
           throw new IllegalArgumentException(
-                  "Illegal code in extend section: " + code.getClass().getName());
+              "Illegal code in extend section: " + code.getClass().getName());
         }
       }
       Map<String, ExtendNameCode> debugMap = null;
@@ -407,7 +410,7 @@ public class BuilderCodeFactory implements CodeFactory {
       if (Mustache.debug) {
         if (debugMap != null && debugMap.size() > 0) {
           throw new MustacheException(
-                  "Replacement sections failed to match named sections: " + debugMap.keySet());
+              "Replacement sections failed to match named sections: " + debugMap.keySet());
         }
       }
     }
@@ -470,7 +473,7 @@ public class BuilderCodeFactory implements CodeFactory {
     public void execute(FutureWriter fw, Scope scope) throws MustacheException {
       if (scope == IdentityScope.one) {
         try {
-          identity("$", fw, scope);
+          identity("$", fw);
         } catch (IOException e) {
           throw new MustacheException("Execution failed: " + file + ":" + line, e);
         }

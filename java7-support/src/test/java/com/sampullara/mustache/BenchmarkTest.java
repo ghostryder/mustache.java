@@ -59,7 +59,7 @@ public class BenchmarkTest extends TestCase {
         }
         System.out.println("Interpreted: " + total);
       }
-    }
+     }
   }
 
   private StringWriter complextest(Mustache m) throws MustacheException, IOException {
