@@ -87,3 +87,5 @@ in order to not use a up a thread for each of the sleeps:
       }
 
 This should enable scheduled tasks, streaming behavior and asynchronous i/o.
+
+Modified to iterate over Map key set and allow manipulation of data after object interpolation.
