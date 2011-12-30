@@ -8,13 +8,13 @@ import com.sampullara.util.TemplateFunction;
  * Used to reproduce markup from code.
  */
 public abstract class FunctionIterator implements Iterable<Scope> {
-  private boolean isTemplateFunction;
+	private boolean isTemplateFunction;
 
-  public FunctionIterator(Function function) {
-    isTemplateFunction = function instanceof TemplateFunction;
-  }
+	public FunctionIterator(Function function) {
+		isTemplateFunction = function instanceof TemplateFunction;
+	}
 
-  public boolean isTemplateFunction() {
-    return isTemplateFunction;
-  }
+	public boolean isTemplateFunction() {
+		return isTemplateFunction;
+	}
 }
